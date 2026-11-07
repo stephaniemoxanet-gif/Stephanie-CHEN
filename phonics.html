@@ -1,0 +1,36 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ray's Phonics 聽音辨字</title><style>:root{font-family:Arial,'Noto Sans TC',sans-serif;color:#263349;background:#f5f8ff}*{box-sizing:border-box}body{margin:0}.wrap{max-width:850px;margin:auto;padding:18px}h1{text-align:center;color:#3155a2;margin:12px 0}p{text-align:center}.tabs{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}.tab,button{cursor:pointer;border:0;border-radius:17px;padding:13px 20px;font-size:20px;font-weight:700}.tab{background:#e1e9ff;color:#34549d}.tab.active{background:#4166c9;color:white}.panel{margin-top:18px;background:white;border-radius:26px;padding:25px;box-shadow:0 6px 28px #253b6a18;text-align:center}.muted{color:#68758b}.progress{height:13px;background:#e8eefa;border-radius:20px;overflow:hidden}.progress>div{height:100%;background:#5dbb9b;transition:width .2s}.speaker{background:#ffdc69;color:#563a00;font-size:27px;margin:20px 0 12px;padding:18px 34px}.choices{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:15px 0}.choice{background:#eef4ff;border:3px solid #9fb7f3;min-height:115px;font-size:40px;color:#244b8c}.choice.correct{background:#d7f5e6;border-color:#29a76b}.choice.wrong{background:#ffe0e0;border-color:#e66363}.choice:disabled{opacity:.75;cursor:default}.choicebox{display:flex;flex-direction:column;gap:7px}.compare{background:#fff1c8;color:#5b4300;border:2px solid #e9bc55;font-size:18px;padding:10px}.compare:focus-visible,.choice:focus-visible{outline:4px solid #355fbc}.help{background:#fff8e8;border:2px solid #f3d58a;border-radius:15px;padding:13px;font-size:17px;line-height:1.5;margin:10px 0}.help[hidden]{display:none}.feedback{font-size:23px;font-weight:bold;min-height:36px;margin:10px 0}.next{background:#3d72d9;color:white}.next:disabled{background:#a8b7d4}.foot{font-size:14px;color:#69788e;margin-top:18px}.results{font-size:25px}.small{font-size:17px}.reset{background:#e9eef9;color:#294a8e;margin-top:12px}@media(max-width:520px){.choice{font-size:32px;min-height:96px}.panel{padding:17px}.speaker{font-size:23px}}</style></head><body><main class="wrap"><h1>🐣 Ray's Phonics</h1><p>👂 聽聲音　🔤 選拼字　⭐ 即時回饋　🔊 答錯可比較兩個選項</p><div class="tabs" id="tabs"></div><section class="panel"><div id="quiz"></div></section><p class="foot">使用裝置內建英文語音朗讀。第一次播放可能需要稍等；建議使用 Chrome 或 Edge 並開啟音量。可直接離線開啟本檔練習。注意：已改用真實單字對照，避免讓語音引擎朗讀 ane、ame 等非獨立單字。不同裝置的合成語音仍可能有差異，請老師先試聽。</p></main><script>
+const groups=[
+{name:'第1組｜基礎辨音',questions:[['can','cane'],['pan','pane'],['at','ate'],['hop','hope'],['kit','kite'],['cane','can'],['pane','pan'],['ate','at'],['hope','hop'],['kite','kit']]},
+{name:'第2組｜換子音',questions:[['man','mane'],['hat','hate'],['not','note'],['hid','hide'],['rob','robe'],['mane','man'],['hate','hat'],['note','not'],['hide','hid'],['robe','rob']]},
+{name:'第3組｜混合挑戰',questions:[['pan','pane'],['fat','fate'],['cop','cope'],['rid','ride'],['mad','made'],['pane','pan'],['fate','fat'],['cope','cop'],['ride','rid'],['made','mad']]}
+];
+// Each item: first is target, second is contrasting spelling. All target words are real words to reduce browser TTS errors.
+let gi=0,qi=0,score=0,answered=false,firstTry=true,failed=false;
+const tabs=document.getElementById('tabs'),quiz=document.getElementById('quiz');
+function say(s){if(!('speechSynthesis'in window)){alert('此瀏覽器不支援語音朗讀，請使用 Chrome 或 Edge');return;}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(s);u.lang='en-US';u.rate=.72;u.pitch=1;const voices=speechSynthesis.getVoices();let v=voices.find(x=>x.lang==='en-US'&&/Google|Microsoft|Samantha|Jenny/i.test(x.name))||voices.find(x=>x.lang.startsWith('en'));if(v)u.voice=v;speechSynthesis.speak(u)}
+function tabsRender(){tabs.innerHTML='';groups.forEach((g,i)=>{let b=document.createElement('button');b.className='tab'+(i===gi?' active':'');b.textContent=g.name;b.onclick=()=>{gi=i;qi=0;score=0;render()};tabs.appendChild(b)})}
+function render(){
+ tabsRender();const g=groups[gi];
+ if(qi>=g.questions.length){quiz.innerHTML=`<div class="results">🎉 完成第 ${gi+1} 組！<h2>⭐ ${score} / ${g.questions.length} 題首次答對</h2><p class="small">答錯時可反覆聽兩個選項，再重新作答。</p><button class="reset" id="again">🔄 再練一次</button></div>`;document.getElementById('again').onclick=()=>{qi=0;score=0;render()};return;}
+ answered=false;firstTry=true;failed=false;
+ const [target,other]=g.questions[qi];const choices=qi%2===0?[target,other]:[other,target];
+ quiz.innerHTML=`<div class="muted">第 ${qi+1} / ${g.questions.length} 題</div><div class="progress"><div style="width:${100*qi/g.questions.length}%"></div></div><button class="speaker" id="listen">🔊 聽題目發音</button><div class="small muted">先聽題目，再選拼字</div><div class="choices" id="choices"></div><div class="feedback" id="feedback" aria-live="polite"></div><div class="help" id="help" hidden>🔎 聽不清楚嗎？請點每個字下面的 <strong>🔊 聽這個字</strong>，比較兩個發音。<br>可以反覆播放，再點拼字重新作答。</div><button class="next" id="next" disabled>下一題 ➜</button>`;
+ document.getElementById('listen').onclick=()=>say(target);
+ const ch=document.getElementById('choices');
+ choices.forEach(word=>{
+  const wrap=document.createElement('div');wrap.className='choicebox';
+  const b=document.createElement('button');b.className='choice';b.textContent=word;b.setAttribute('aria-label','選擇 '+word);
+  const audio=document.createElement('button');audio.className='compare';audio.textContent='🔊 聽「'+word+'」';audio.hidden=true;audio.setAttribute('aria-label','播放 '+word+' 的發音');
+  audio.onclick=()=>say(word);
+  b.onclick=()=>{
+   if(answered)return;
+   if(word===target){b.classList.add('correct');document.getElementById('feedback').textContent=failed?'✅ 答對了！可再聽兩個選項比較。':'🌟 太棒了，答對！';if(firstTry)score++;answered=true;document.querySelectorAll('.choice').forEach(x=>x.disabled=true);document.getElementById('next').disabled=false;say(target);}
+   else{b.classList.add('wrong');document.getElementById('feedback').textContent='還不對！請聽兩個選項的聲音，再選一次。';firstTry=false;failed=true;document.getElementById('help').hidden=false;document.querySelectorAll('.compare').forEach(x=>x.hidden=false);say(target);setTimeout(()=>b.classList.remove('wrong'),700)}
+  };
+  wrap.append(b,audio);ch.appendChild(wrap);
+ });
+ document.getElementById('next').onclick=()=>{qi++;render()};
+}
+
+render();
+</script></body></html>
