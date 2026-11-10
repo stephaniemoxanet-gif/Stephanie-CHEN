@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D生｜不規則動詞三態挑戰</title>
+<style>
+:root{font-family:Arial,"Microsoft JhengHei",sans-serif;color:#23364b;background:#f5f7fb}*{box-sizing:border-box}
+body{margin:0}.wrap{max-width:900px;margin:28px auto;padding:0 18px}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px}h1{font-size:25px;margin:0 0 8px}p{line-height:1.6}
+.card{background:#fff;border:1px solid #dde4ed;border-radius:20px;padding:25px;box-shadow:0 6px 24px #24374b0c;margin-top:16px}
+.meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#64748b;font-size:14px}
+.progress{height:10px;background:#e5ebf3;border-radius:10px;overflow:hidden;margin:12px 0 25px}
+.progress>div{height:100%;width:0;background:#4b8d9b;transition:width .2s}
+.meaning{text-align:center;font-size:27px;font-weight:700;margin:22px 0 26px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.slot{border:1px solid #dce3eb;background:#f9fbfd;border-radius:15px;padding:14px 10px;min-width:0;text-align:center}
+.slot label{font-weight:700;font-size:14px;display:block;margin-bottom:10px}
+.slot input,.slot .shown{font-family:Georgia,"Times New Roman",serif;font-size:21px;text-align:center;width:100%;padding:12px 4px;border-radius:9px;border:1px solid #b8c7d6;background:white;min-width:0}
+.slot .shown{background:#edf2f5;border-color:#edf2f5;min-height:51px;display:flex;align-items:center;justify-content:center;overflow-wrap:anywhere}
+.slot input:focus{outline:2px solid #2e8296}.slot input.bad{border-color:#d86c6c;background:#fff5f5}
+.speak{display:inline-flex;align-items:center;justify-content:center;margin-top:10px;gap:5px;background:transparent;border:1px solid #cbd5e1;border-radius:20px;color:#285d77;padding:8px 12px;cursor:pointer}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+button{font-size:15px;cursor:pointer}.primary{background:#276d85;border:0;color:white;border-radius:10px;padding:13px 25px;font-weight:700}.secondary{background:#eef4f7;border:1px solid #c7d8df;color:#255b70;border-radius:10px;padding:11px 20px}
+.primary:disabled{opacity:.45;cursor:not-allowed}.feedback{min-height:55px;margin-top:18px;text-align:center;line-height:1.7;font-size:16px}
+.good{color:#17765b}.wrong{color:#aa3e3e}.note{font-size:13px;color:#6b7a8d}
+.hidden{display:none!important}.levels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:20px 0}.level{padding:17px;text-align:left;border:1px solid #c9d9e2;background:#f3f9fb;border-radius:14px;color:#1d4d65;font-weight:700}.level small{display:block;font-weight:400;margin-top:5px;color:#5c7082}.level:hover{background:#e3f1f6}@media(max-width:600px){.levels{grid-template-columns:1fr}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.card{padding:18px}.slot{display:grid;grid-template-columns:90px 1fr;align-items:center;text-align:left;gap:8px}.slot label{margin:0}.slot .speak{grid-column:2;justify-self:start}.meaning{font-size:24px}h1{font-size:21px}}
+</style></head><body><div class="wrap">
+<header><div><h1>不規則動詞三態挑戰</h1><div class="note">D生專用｜每次一題・填對兩格才能繼續</div></div><button class="secondary" id="restart">返回關卡選單</button></header>
+<section class="card" id="intro"><h2>挑戰規則</h2><p>每題顯示中文意思與三態，其中<strong>隨機隱藏兩格</strong>。兩格都答對，才能進入下一題。</p>
+<p>不會拼寫時，按該空格下方的 🔊 聽發音。<strong>同一空格答錯兩次</strong>，系統直接顯示正確答案，並記錄為待複習。</p>
+<p>每關完成後，只針對答錯的動詞重新挑戰；答對所有錯題才算通關。可隨時回到關卡選單，選其他關卡。</p>
+<p class="note">題庫依照你提供的《高二英文｜常見不規則動詞三態》共 <span id="count"></span> 個動詞。部分動詞接受表中列出的兩種拼法。發音功能依賴瀏覽器語音合成，建議使用 Chrome 或 Edge 並開啟聲音。</p>
+<div id="levels" class="levels"></div><p class="note">第六關每次隨機抽取50個不同動詞。切換或重新開始會重置目前關卡進度。</p></section>
+<section class="card hidden" id="quiz">
+<div class="meta"><span id="phase"></span><span id="position"></span></div><div class="progress"><div id="bar"></div></div>
+<div class="meaning" id="meaning"></div><div class="grid" id="slots"></div>
+<div class="feedback" id="feedback" aria-live="polite"></div>
+<div class="actions"><button class="primary" id="check">檢查答案</button><button class="primary hidden" id="next">下一題 →</button></div>
+</section>
+<section class="card hidden" id="end"><h2 id="endTitle"></h2><p id="endText"></p><div class="actions"><button class="primary" id="again">再挑戰本關</button><button class="secondary" id="menu">返回關卡選單</button></div></section>
+</div><script>
+const VERBS=[["cut", "cut", "cut", "切"], ["put", "put", "put", "放"], ["let", "let", "let", "讓"], ["hit", "hit", "hit", "打；擊中"], ["hurt", "hurt", "hurt", "傷害"], ["set", "set", "set", "設定；放置"], ["shut", "shut", "shut", "關閉"], ["cost", "cost", "cost", "花費"], ["spread", "spread", "spread", "傳播；攤開"], ["burst", "burst", "burst", "爆裂"], ["cast", "cast", "cast", "投擲；選派角色"], ["quit", "quit", "quit", "停止；退出"], ["bring", "brought", "brought", "帶來"], ["buy", "bought", "bought", "買"], ["think", "thought", "thought", "想；認為"], ["fight", "fought", "fought", "打架；奮戰"], ["catch", "caught", "caught", "抓住"], ["teach", "taught", "taught", "教"], ["seek", "sought", "sought", "尋求"], ["build", "built", "built", "建造"], ["send", "sent", "sent", "寄送"], ["spend", "spent", "spent", "花費"], ["lend", "lent", "lent", "借出"], ["bend", "bent", "bent", "彎曲"], ["keep", "kept", "kept", "保持"], ["sleep", "slept", "slept", "睡覺"], ["feel", "felt", "felt", "感覺"], ["leave", "left", "left", "離開"], ["mean", "meant", "meant", "意指"], ["deal", "dealt", "dealt", "處理"], ["hear", "heard", "heard", "聽見"], ["make", "made", "made", "製作"], ["have", "had", "had", "有"], ["say", "said", "said", "說"], ["pay", "paid", "paid", "支付"], ["lay", "laid", "laid", "放置；下蛋"], ["sell", "sold", "sold", "賣"], ["tell", "told", "told", "告訴"], ["hold", "held", "held", "握住；舉行"], ["find", "found", "found", "找到"], ["stand", "stood", "stood", "站立"], ["understand", "understood", "understood", "理解"], ["win", "won", "won", "贏"], ["sit", "sat", "sat", "坐"], ["meet", "met", "met", "遇見"], ["feed", "fed", "fed", "餵養"], ["lead", "led", "led", "帶領"], ["lose", "lost", "lost", "失去"], ["shoot", "shot", "shot", "射擊"], ["get", "got", "got / gotten", "得到；變得"], ["come", "came", "come", "來"], ["become", "became", "become", "變成"], ["run", "ran", "run", "跑"], ["overcome", "overcame", "overcome", "克服"], ["be", "was / were", "been", "是；存在"], ["begin", "began", "begun", "開始"], ["drink", "drank", "drunk", "喝"], ["sing", "sang", "sung", "唱"], ["swim", "swam", "swum", "游泳"], ["ring", "rang", "rung", "響鈴"], ["sink", "sank", "sunk", "下沉"], ["drive", "drove", "driven", "開車"], ["ride", "rode", "ridden", "騎"], ["write", "wrote", "written", "寫"], ["rise", "rose", "risen", "升起"], ["arise", "arose", "arisen", "出現；發生"], ["give", "gave", "given", "給"], ["forgive", "forgave", "forgiven", "原諒"], ["take", "took", "taken", "拿；帶走"], ["shake", "shook", "shaken", "搖動"], ["mistake", "mistook", "mistaken", "誤認"], ["eat", "ate", "eaten", "吃"], ["fall", "fell", "fallen", "跌倒"], ["see", "saw", "seen", "看見"], ["do", "did", "done", "做"], ["go", "went", "gone", "去"], ["know", "knew", "known", "知道"], ["grow", "grew", "grown", "成長；種植"], ["throw", "threw", "thrown", "丟"], ["blow", "blew", "blown", "吹"], ["draw", "drew", "drawn", "畫"], ["fly", "flew", "flown", "飛"], ["show", "showed", "shown / showed", "展示"], ["break", "broke", "broken", "打破"], ["choose", "chose", "chosen", "選擇"], ["speak", "spoke", "spoken", "說話"], ["steal", "stole", "stolen", "偷"], ["freeze", "froze", "frozen", "結冰"], ["wake", "woke", "woken", "醒來"], ["wear", "wore", "worn", "穿戴"], ["tear", "tore", "torn", "撕裂"], ["bear", "bore", "borne / born", "承受；生育"], ["forget", "forgot", "forgotten", "忘記"], ["hide", "hid", "hidden", "躲藏"], ["bite", "bit", "bitten", "咬"], ["lie", "lay", "lain", "躺；位於"], ["beat", "beat", "beaten", "擊敗；敲打"], ["light", "lit / lighted", "lit / lighted", "點燃；照亮"], ["burn", "burnt / burned", "burnt / burned", "燃燒"], ["dream", "dreamt / dreamed", "dreamt / dreamed", "做夢"], ["smell", "smelt / smelled", "smelt / smelled", "聞起來"], ["spell", "spelt / spelled", "spelt / spelled", "拼字"], ["spill", "spilt / spilled", "spilt / spilled", "灑出"], ["kneel", "knelt / kneeled", "knelt / kneeled", "跪下"], ["leap", "leapt / leaped", "leapt / leaped", "跳躍"], ["prove", "proved", "proven / proved", "證明"], ["read", "read", "read", "閱讀（拼字相同，讀音不同）"]];
+const LEVELS=[[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48], [49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71], [72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 106], [96, 97, 98, 99, 100, 101, 102, 103, 104, 105]];
+const $=id=>document.getElementById(id);
+const shuffle=a=>{let b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b};
+const alternatives=s=>s.split(/\s*\/\s*/).map(x=>x.trim().toLowerCase());
+const normalize=s=>s.trim().toLowerCase().replace(/\s+/g,' ');
+let round=1,queue=[],index=0,misses=new Map(),mistakes=new Map(),current=null,selectedLevel=0;
+$('count').textContent=VERBS.length;
+LEVELS.forEach((ids,i)=>{let b=document.createElement('button');b.className='level';b.innerHTML='第 '+(i+1)+' 關<small>PDF 第 '+(i+1)+' 頁｜'+ids.length+' 題</small>';b.onclick=()=>start(i);$('levels').append(b)});let mix=document.createElement('button');mix.className='level';mix.innerHTML='第六關｜混合挑戰<small>全題庫隨機抽選50題</small>';mix.onclick=()=>start(5);$('levels').append(mix);
+function speak(s,part){
+ if(!('speechSynthesis' in window)){alert('此瀏覽器不支援語音播放。建議使用 Chrome 或 Edge。');return}
+ speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(s);u.lang='en-US';u.rate=.78;
+ // "read" V2/V3 uses /red/; first-party browser speech sometimes defaults to /reed/
+ if(s==='read' && part>0){u.text='red';}
+ speechSynthesis.speak(u);
+}
+function start(level=selectedLevel){
+ selectedLevel=level;round=1;queue=level===5?shuffle(VERBS.map((_,i)=>i)).slice(0,50):shuffle(LEVELS[level]);index=0;misses=new Map();mistakes=new Map();
+ $('intro').classList.add('hidden');$('end').classList.add('hidden');$('quiz').classList.remove('hidden');render();
+}
+function newQuestion(verbIndex){
+ let v=VERBS[verbIndex],hidden;
+ let previous=misses.get(verbIndex);
+ if(round>1 && previous && previous.size){
+  let target=shuffle([...previous])[0];let other=shuffle([0,1,2].filter(x=>x!==target))[0];hidden=[target,other].sort();
+ }else hidden=shuffle([0,1,2]).slice(0,2).sort();
+ current={verbIndex,v,hidden,errors:[0,0,0],solved:new Set(),revealed:new Set(),everWrong:new Set(),done:false};
+}
+function render(){
+ if(index>=queue.length){finishRound();return}
+ newQuestion(queue[index]);let q=current;
+ $('phase').textContent='第'+(selectedLevel+1)+'關｜'+(round===1?'第一輪':'第 '+round+' 輪錯題複習');
+ $('position').textContent=(index+1)+' / '+queue.length;
+ $('bar').style.width=((index)/queue.length*100)+'%';
+ $('meaning').textContent=q.v[3];
+ $('feedback').textContent='請填寫兩個空格，完成後按「檢查答案」。';
+ $('feedback').className='feedback';
+ $('slots').innerHTML='';
+ const labels=['V1 原形','V2 過去式','V3 過去分詞'];
+ for(let i=0;i<3;i++){
+  let el=document.createElement('div');el.className='slot';
+  let label=document.createElement('label');label.textContent=labels[i];el.append(label);
+  if(q.hidden.includes(i)){
+   let inp=document.createElement('input');inp.id='ans'+i;inp.autocomplete='off';inp.autocapitalize='off';inp.spellcheck=false;inp.placeholder='請輸入英文';inp.setAttribute('aria-label',labels[i]);inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(!$('check').classList.contains('hidden'))check();else advance()}});el.append(inp);
+   let btn=document.createElement('button');btn.className='speak';btn.type='button';btn.textContent='🔊 發音提示';btn.addEventListener('click',()=>speak(alternatives(q.v[i])[0],i));el.append(btn);
+  }else{let shown=document.createElement('div');shown.className='shown';shown.textContent=q.v[i];el.append(shown)}
+  $('slots').append(el);
+ }
+ $('check').classList.remove('hidden');$('next').classList.add('hidden');
+ $('check').disabled=false;setTimeout(()=>{let first=$('ans'+q.hidden[0]);if(first)first.focus()},30);
+}
+function check(){
+ let q=current;if(!q||q.done)return;
+ let wrong=[],corrected=[],pending=[];
+ for(let i of q.hidden){
+  if(q.solved.has(i)||q.revealed.has(i))continue;
+  let input=$('ans'+i);let answer=normalize(input.value);
+  if(alternatives(q.v[i]).some(x=>normalize(x)===answer)){
+   q.solved.add(i);input.disabled=true;input.classList.remove('bad');input.style.background='#e6f5ee';corrected.push(i);
+  }else{
+   q.errors[i]++;q.everWrong.add(i);wrong.push(i);input.classList.add('bad');
+   if(q.errors[i]>=2){
+    q.revealed.add(i);input.value=q.v[i];input.disabled=true;input.style.background='#fff2d8';pending.push(i);
+   }
+  }
+ }
+ if(q.solved.size+q.revealed.size===q.hidden.length){
+  q.done=true;
+  if(q.everWrong.size){
+   if(!mistakes.has(q.verbIndex))mistakes.set(q.verbIndex,new Set());
+   for(let i of q.everWrong)mistakes.get(q.verbIndex).add(i);
+  }else if(round>1){mistakes.delete(q.verbIndex)}
+  if(round>1 && q.everWrong.size){
+   let prev=misses.get(q.verbIndex)||new Set();for(let i of q.everWrong)prev.add(i);misses.set(q.verbIndex,prev);
+  }
+  $('feedback').textContent=q.revealed.size?'本題有錯誤，已顯示答案並列入錯題複習。請看清楚拼法，再進下一題。':'兩格都正確！可以進入下一題。';
+  $('feedback').className='feedback '+(q.revealed.size?'wrong':'good');
+  $('check').classList.add('hidden');$('next').classList.remove('hidden');$('next').textContent=index===queue.length-1?'完成本輪 →':'下一題 →';
+ }else{
+  $('feedback').textContent=pending.length?'有空格答錯兩次，已顯示答案。請完成其他空格。':wrong.length?'還有空格不正確，請再試一次。每格答錯兩次會顯示答案。':'已答對部分空格，請完成其餘空格。';
+  $('feedback').className='feedback '+(wrong.length?'wrong':'good');
+ }
+}
+function advance(){if(!current||!current.done)return;index++;render()}
+function finishRound(){
+ $('bar').style.width='100%';
+ if(round===1){
+  if(!mistakes.size){finish('全部挑戰完成！','本關第一輪所有動詞都沒有答錯！');return}
+  misses=new Map([...mistakes].map(([k,v])=>[k,new Set(v)]));
+  queue=shuffle([...mistakes.keys()]);index=0;round++;mistakes=new Map();render();return;
+ }
+ if(!mistakes.size){finish('錯題複習完成！','本關所有曾答錯的動詞都已在複習輪中答對。');return}
+ misses=new Map([...mistakes].map(([k,v])=>[k,new Set(v)]));
+ queue=shuffle([...mistakes.keys()]);index=0;round++;mistakes=new Map();render();
+}
+function finish(title,txt){$('quiz').classList.add('hidden');$('end').classList.remove('hidden');$('endTitle').textContent=title;$('endText').textContent=txt+' 可以選擇其他關卡繼續練習。'}
+$('check').onclick=check;$('next').onclick=advance;$('again').onclick=()=>start(selectedLevel);$('menu').onclick=showMenu;
+function showMenu(){if(!$('quiz').classList.contains('hidden')&&!confirm('返回關卡選單？目前進度將清除。'))return;$('quiz').classList.add('hidden');$('end').classList.add('hidden');$('intro').classList.remove('hidden')}
+$('restart').onclick=showMenu;
+</script></body></html>
