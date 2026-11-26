@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="用台灣日常情境學習中文單字與例句。">
+<title>生活華語｜Everyday Mandarin</title>
+<style>
+:root{--ink:#242822;--quiet:#555f56;--line:#d7dfd8;--green:#225640;--pale:#eff5ef;--copper:#8b4b37;--bg:#f8faf6}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"DFKai-SB","BiauKai","Noto Sans TC",system-ui,sans-serif;font-size:1rem;line-height:1.65}
+[lang=en]{font-family:"Times New Roman",serif;font-size:12pt}
+.wrap{width:min(1100px,calc(100% - 2.5rem));margin-inline:auto}
+.top{background:white;border-bottom:1px solid var(--line)}
+.top-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.top-inner{padding-block:1rem}
+.brand{text-decoration:none;font-weight:700;color:var(--green);display:flex;align-items:center;gap:.65rem}
+.brand .en{font-weight:400}
+.mark{display:grid;place-items:center;width:2.25rem;height:2.25rem;background:var(--green);color:white;border-radius:.55rem}
+.mode{display:flex;flex-wrap:wrap;gap:.25rem;padding:.25rem;border:1px solid var(--line);border-radius:.8rem}
+button,select{font:inherit;color:var(--green);background:white;border:1px solid #afc4b5;border-radius:.55rem;padding:.36rem .72rem;min-height:44px;cursor:pointer}
+button:hover,select:hover{background:var(--pale)}
+button[aria-pressed=true],.primary{background:var(--green);color:white;border-color:var(--green)}
+button.primary:hover,button[aria-pressed=true]:hover{background:#154533}
+button:disabled{cursor:default;opacity:.8}
+.mode button{border-color:transparent}
+a{color:var(--green)}
+:focus-visible{outline:3px solid #a75232;outline-offset:3px}
+.hero{margin-top:1.4rem;background:#184534;color:#fff;border-radius:1.35rem;padding:clamp(1.4rem,5vw,3.2rem);display:flex;align-items:end;justify-content:space-between;gap:1.5rem;flex-wrap:wrap}
+.hero h1{margin:.1rem 0;font-size:clamp(2.4rem,7vw,4.7rem);line-height:1.18;letter-spacing:.035em}
+.hero p{margin:.35rem 0}
+.hero .en{color:#e0eee1}
+.hero .subtitle{margin:.5rem 0 1.15rem}
+.eyebrow{font-weight:700;color:#f2d7a9}
+.eyebrow .en{margin-left:.65rem}
+.hero-note{border-left:1px solid #86a995;padding-left:1rem;min-width:9rem}
+.hero-note strong{font-size:1.6rem;color:#f2d7a9}
+nav{display:flex;flex-wrap:wrap;gap:.5rem;margin-block:1.1rem}
+nav a{padding:.55rem .8rem;border:1px solid var(--line);background:white;border-radius:.55rem;text-decoration:none}
+nav a:hover{background:var(--pale)}
+.audio-bar{display:flex;gap:.55rem;align-items:center;flex-wrap:wrap;padding:.75rem 0;border-bottom:1px solid var(--line)}
+#audio-status{color:var(--copper)}
+section{scroll-margin-top:1rem}
+.section-head{margin:2rem 0 1rem}
+.section-head p{margin:.25rem 0;color:var(--quiet)}
+h2{margin:0;font-size:1.85rem;color:var(--green)}
+h3{margin:.45rem 0}
+h2 .en,h3 .en{margin-left:.4rem;font-weight:400;color:var(--quiet)}
+.deck{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,305px),1fr));gap:.9rem;margin-bottom:1.8rem}
+.card,.paper{background:white;border:1px solid var(--line);border-radius:1rem;padding:1.15rem}
+.card-head{display:flex;justify-content:space-between;align-items:start;gap:.45rem}
+.card h4{font-size:clamp(1.3rem,3vw,1.65rem);margin:0;color:var(--green)}
+.card p{margin:.35rem 0}
+.pron{color:var(--copper)}
+.card ol{padding:0 0 0 1.25rem;margin:1rem 0 0;border-top:1px solid var(--line)}
+.card li{margin-top:.8rem}
+.translation{color:var(--quiet)}
+.examples button{margin-top:.35rem}
+details{margin-top:.35rem}
+summary{cursor:pointer;color:var(--green)}
+footer{margin-block:2rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--quiet)}
+.options{display:flex;flex-wrap:wrap;gap:.5rem;margin:.85rem 0}
+.correct{background:#e0f2e2;color:#185831}
+.incorrect{background:#f8e4dd;color:#852e20}
+#feedback{min-height:1.7rem}
+body.review .en{display:none}
+body.review .mode .en,body.review details .en{display:inline}
+body.review .helper{display:none}
+@media(max-width:520px){.wrap{width:calc(100% - 1.2rem)}.hero-note{display:flex;gap:1.1rem;border-left:0;border-top:1px solid #86a995;padding:0;width:100%}.hero-note p{margin-top:.6rem}.brand{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-inner">
+    <a class="brand" href="#vocab"><span class="mark" aria-hidden="true">華</span>生活華語 <span class="en" lang="en">Everyday Mandarin</span></a>
+    <div class="mode" role="group" aria-label="學習模式 · Study mode">
+      <button data-mode="beginner" aria-pressed="true"><span lang="en">Beginner</span> 初學</button>
+      <button data-mode="review" aria-pressed="false"><span lang="en">Review</span> 複習</button>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <section class="hero">
+    <div><p class="eyebrow">台灣生活中文 <span class="en" lang="en">Mandarin in Taiwan</span></p>
+    <h1>一起去買麵包</h1>
+    <p class="subtitle en" lang="en">Let’s buy some bread</p>
+    <p>從認識同學、逛店結帳，到聊聊食物的味道。</p>
+    <p class="en" lang="en">Meet a classmate, shop for bread, and talk about how it smells and tastes.</p></div>
+    <div class="hero-note"><p><strong>18</strong> 個詞 <span class="en" lang="en">terms</span></p><p><strong>36</strong> 句例句 <span class="en" lang="en">examples</span></p></div>
+  </section>
+  <nav aria-label="學習活動 · Activities">
+    <a href="#vocab">單字 <span class="en" lang="en">Vocabulary</span></a>
+    <a href="#quiz">練習 <span class="en" lang="en">Practice</span></a>
+  </nav>
+  <div class="audio-bar">
+    <label for="rate">朗讀速度 <span class="en" lang="en">Audio speed</span></label>
+    <select id="rate"><option value="0.76">慢速 · Slow</option><option value="1">一般 · Normal</option></select>
+    <button type="button" id="stop">停止 <span class="en" lang="en">Stop</span></button>
+    <span id="audio-status" role="status"></span>
+  </div>
+  <section id="vocab" aria-labelledby="vocab-title">
+    <div class="section-head"><h2 id="vocab-title">單字 <span class="en" lang="en">Vocabulary</span></h2>
+    <p>點選「聽」跟讀。拼音標示基本聲調，「一」在句中會變調，例如「一個」讀 yí ge（ㄧˊ ˙ㄍㄜ）。</p>
+    <p class="en" lang="en">Tap Listen and repeat. Pinyin shows base tones. In speech, 一個 sounds like yí ge.</p></div>
+    <div id="word-groups"></div>
+  </section>
+  <section id="quiz" aria-labelledby="quiz-title">
+    <div class="section-head"><h2 id="quiz-title">練習 <span class="en" lang="en">Practice</span></h2>
+    <p>初學模式練習看英文選詞，複習模式練習例句填空。</p><p class="en" lang="en">In Beginner mode, match English to Chinese. In Review mode, fill in the blank.</p></div>
+    <div id="exercise" class="paper"></div>
+  </section>
+</main>
+<footer class="wrap"><p>語音由瀏覽器生成，優先選用台灣華語。 <span class="en" lang="en">Browser-generated audio uses a Taiwan Mandarin voice when available.</span></p>
+<p>詞義與讀音參考 <a href="https://dict.concised.moe.edu.tw/">教育部《國語辭典簡編本》</a> · <a href="https://www.einvoice.nat.gov.tw/">財政部電子發票整合服務平台</a></p></footer>
+<script>
+const words = [
+["建議","jiànyì","ㄐㄧㄢˋ ㄧˋ","suggestion / to suggest","提出自己認為可行的做法，也指提出的做法。","老師建議我們去附近的小商店買麵包。","The teacher suggested that we buy bread at a nearby small shop.","謝謝你的建議，我想先買一個試試看。","Thanks for your suggestion. I’d like to buy one to try first."],
+["介紹","jièshào","ㄐㄧㄝˋ ㄕㄠˋ","to introduce","讓別人認識某個人、地方或事物。","老師先介紹了今天要去的兩家店。","The teacher first introduced the two shops we were going to visit that day.","我來介紹一下，這是我的同學小美。","Let me introduce my classmate, Xiaomei."],
+["當下","dāngxià","ㄉㄤ ㄒㄧㄚˋ","at that moment / the present moment","指事情發生的那一刻，也可以指現在這一刻。","我當下沒聽懂，就請店員再說一次。","I didn’t understand at that moment, so I asked the clerk to say it again.","聞到燒焦味的當下，他立刻關火。","The moment he smelled something burning, he turned off the stove."],
+["統一發票","tǒngyī fāpiào","ㄊㄨㄥˇ ㄧ ㄈㄚ ㄆㄧㄠˋ","Taiwan uniform invoice","在台灣，店家依規定開給顧客的交易憑證，有紙本，也可以是電子發票。","在連鎖商店買麵包時，店員問我要不要把統一發票存到載具。","When I bought bread at the chain store, the clerk asked whether I wanted to save the invoice to my carrier.","我把這張統一發票留著，回家再對獎。","I’m keeping this invoice so I can check the winning numbers at home."],
+["小商店","xiǎo shāngdiàn","ㄒㄧㄠˇ ㄕㄤ ㄉㄧㄢˋ","small shop","規模比較小的店。日常口語也常說「小店」。","這家小商店的老闆每天早上自己做麵包。","The owner of this small shop makes bread every morning.","我家附近有一家小商店，走路五分鐘就到了。","There’s a small shop a five-minute walk from my home."],
+["連鎖商店","liánsuǒ shāngdiàn","ㄌㄧㄢˊ ㄙㄨㄛˇ ㄕㄤ ㄉㄧㄢˋ","chain store","同一品牌在不同地方開設的店，也常說「連鎖店」。","街角那家連鎖商店在台南有好幾家分店。","The chain store on the corner has several branches in Tainan.","我們在另一家連鎖商店也看到了同樣的麵包。","We saw the same bread at another chain store as well."],
+["發票載具","fāpiào zàijù","ㄈㄚ ㄆㄧㄠˋ ㄗㄞˋ ㄐㄩˋ","e-invoice carrier","用來存取電子發票的工具，例如手機條碼。結帳時店員常簡稱「載具」。","我用手機條碼當發票載具。","I use my mobile barcode as my e-invoice carrier.","店員問我有沒有發票載具，我就拿出手機給他掃條碼。","The clerk asked if I had an invoice carrier, so I held out my phone for him to scan the barcode."],
+["會員","huìyuán","ㄏㄨㄟˋ ㄩㄢˊ","member","加入某個團體或店家會員計畫的人。","小美是這家店的會員，買東西可以累積點數。","Xiaomei is a member of this store and earns points when she shops.","店員問：「請問有會員嗎？」","The clerk asked, “Are you a member?”"],
+["其中一個","qízhōng yī ge","ㄑㄧˊ ㄓㄨㄥ ㄧ ˙ㄍㄜ","one of them","從已經提到的幾個人或東西中，指出一個。","我們買了兩個麵包，其中一個是紅豆口味。","We bought two buns. One of them had red bean filling.","桌上有三個杯子，其中一個是我的。","There are three cups on the table. One of them is mine."],
+["另一個","lìng yī ge","ㄌㄧㄥˋ ㄧ ˙ㄍㄜ","the other one / another one","已經提到一個人或東西之後，再指出不同的一個。","另一個是奶油口味，我打算帶回家。","The other one was butter-flavored, and I planned to take it home.","這個太大了，可以給我看另一個嗎？","This one is too big. Could you show me another one?"],
+["體貼","tǐtiē","ㄊㄧˇ ㄊㄧㄝ","considerate / thoughtful","留意別人的需要，並用行動照顧對方的感受。","小美知道我不喝冰的，特地幫我買了溫豆漿，真體貼。","Xiaomei knew I didn’t drink iced drinks, so she got me warm soy milk. That was thoughtful of her.","他看我提不動，就幫我拿袋子，真體貼。","When he saw I couldn’t lift it, he carried the bag for me. That was very considerate."],
+["體諒","tǐliang","ㄊㄧˇ ˙ㄌㄧㄤ","to be understanding","了解別人的處境或難處，願意包容。","謝謝你體諒我聽得慢，願意再說一次。","Thank you for understanding that I need more time to follow and for saying it again.","請你體諒一下，他今天太累了，想早一點回家。","Please be understanding. He’s tired today and wants to go home early."],
+["體質","tǐzhí","ㄊㄧˇ ㄓˊ","physical constitution / how one’s body responds","一個人身體的特性，例如對食物或環境的反應。","每個人的體質不同，我喝冰的容易肚子痛。","Everyone’s body reacts differently. I tend to get a stomachache after cold drinks.","我的體質比較容易過敏，所以買點心前會先看成分。","I’m prone to allergies, so I check the ingredients before buying snacks."],
+["聞起來的味道","wén qǐlái de wèidào","ㄨㄣˊ ㄑㄧˇ ㄌㄞˊ ˙ㄉㄜ ㄨㄟˋ ㄉㄠˋ","the smell / how it smells","用鼻子聞到的氣味。口語常直接說「聞起來很香」。","紅豆麵包聞起來的味道有點像烤地瓜。","The red bean bun smells a little like roasted sweet potato.","這杯茶聞起來的味道讓我想到茉莉花。","The smell of this tea reminds me of jasmine."],
+["嚐起來的味道","cháng qǐlái de wèidào","ㄔㄤˊ ㄑㄧˇ ㄌㄞˊ ˙ㄉㄜ ㄨㄟˋ ㄉㄠˋ","the flavor / how it tastes","放到嘴裡感受到的味道。口語常直接說「嚐起來很甜」，也可寫作「嘗起來」。","這個麵包嚐起來的味道沒有我想像中那麼甜。","This bun doesn’t taste as sweet as I expected.","這碗湯嚐起來的味道跟我在家煮的很像。","This soup tastes a lot like the soup I make at home."],
+["燒焦","shāojiāo","ㄕㄠ ㄐㄧㄠ","to burn / to get burnt","東西受熱太久，表面變黑或出現焦味。","後來我在家烤麵包，忘了看時間，結果把麵包烤到燒焦了。","Later, I lost track of time while toasting the bread at home, and it burned.","吐司的邊緣燒焦了，聞起來有一股焦味。","The edges of the toast burned, and it smelled burnt."],
+["學生","xuéshēng","ㄒㄩㄝˊ ㄕㄥ","student","在學校或課程中學習的人。成年人也可以是學生。","退休以後，我成了華語班的學生。","After retiring, I became a student in a Mandarin class.","這門課有十位學生，大家每週見一次面。","There are ten students in this class, and we meet once a week."],
+["同學","tóngxué","ㄊㄨㄥˊ ㄒㄩㄝˊ","classmate","跟自己同班或一起上課的人。","我的同學小美今天和我一起練習用中文買東西。","My classmate Xiaomei practiced shopping in Mandarin with me today.","我和兩位同學約好週末一起複習。","Two classmates and I arranged to review together this weekend."]
+];
+
+const groups = [
+  ["人物與應對","People & conversation",[16,17,0,1,2,10,11]],
+  ["逛店與結帳","Shopping & checkout",[4,5,3,6,7]],
+  ["挑選與品嚐","Choosing & tasting",[8,9,12,13,14,15]]
+];
+</script>
+<script>
+const get = id => document.getElementById(id);
+const english = value => `<span class="en" lang="en">${value}</span>`;
+const listen = (value, description, label = "聽", translation = "Listen") =>
+  `<button type="button" data-say="${value}" aria-label="${description}">${label} ${english(translation)}</button>`;
+const speech = window.speechSynthesis;
+let playback = 0;
+let mode = "beginner";
+
+function setAudioStatus(chinese, translation) {
+  get("audio-status").innerHTML = chinese + (translation ? " " + english(translation) : "");
+}
+
+function play(text) {
+  if (!speech || !window.SpeechSynthesisUtterance) {
+    setAudioStatus("此瀏覽器無法朗讀。", "Speech playback is unavailable in this browser.");
+    return;
+  }
+  const current = ++playback;
+  speech.cancel();
+  const line = new SpeechSynthesisUtterance(text);
+  const voices = speech.getVoices();
+  const language = voice => voice.lang.toLowerCase().replaceAll("_", "-");
+  const voice = voices.find(voice => language(voice) === "zh-tw")
+    ?? voices.find(voice => /^(zh(-hant)?-cn|zh-hans|cmn(-.*)?|zh)$/.test(language(voice)));
+  if (voice) line.voice = voice;
+  line.lang = voice?.lang ?? "zh-TW";
+  line.rate = Number(get("rate").value);
+  line.onstart = () => {
+    if (current === playback) setAudioStatus("朗讀中", "Playing");
+  };
+  line.onend = () => {
+    if (current === playback) setAudioStatus("");
+  };
+  line.onerror = () => {
+    if (current === playback) setAudioStatus("無法播放，請確認裝置已啟用中文語音。", "Check that a Mandarin voice is installed on your device.");
+  };
+  setAudioStatus("準備朗讀", "Preparing audio");
+  speech.speak(line);
+}
+
+function makeCard([word, pinyin, bopomofo, gloss, definition, first, firstEn, second, secondEn]) {
+  return `<article class="card"><div class="card-head"><h4>${word}</h4>
+    ${listen(word, `聽「${word}」 · Listen to ${word}`)}</div>
+    <p class="pron helper"><span lang="en">${pinyin}</span> · ${bopomofo}</p>
+    <details class="review-help" hidden><summary>拼音、注音與英文</summary>
+      <p class="pron"><span lang="en">${pinyin}</span> · ${bopomofo}</p><p lang="en">${gloss}</p></details>
+    <p class="translation en" lang="en">${gloss}</p><p>${definition}</p>
+    <ol class="examples">${[[first, firstEn], [second, secondEn]].map(([sentence, translation], index) =>
+      `<li><div>${sentence}</div><div class="translation en" lang="en">${translation}</div>
+      ${listen(sentence, `聽「${word}」例句 ${index + 1} · Listen to example ${index + 1}`)}</li>`).join("")}</ol>
+    </article>`;
+}
+
+get("word-groups").innerHTML = groups.map(([chinese, translation, ids]) =>
+  `<section><h3>${chinese} ${english(translation)}</h3><div class="deck">${ids.map(id => makeCard(words[id])).join("")}</div></section>`).join("");
+
+function shuffle(items) {
+  const shuffled = [...items];
+  for (let index = shuffled.length - 1; index > 0; index--) {
+    const other = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[other]] = [shuffled[other], shuffled[index]];
+  }
+  return shuffled;
+}
+const quiz = get("exercise");
+let queue;
+let missed;
+let position;
+let answered;
+let attempts;
+
+function start(ids) {
+  queue = shuffle(ids);
+  missed = [];
+  position = 0;
+  showQuestion();
+}
+
+function showQuestion() {
+  if (position >= queue.length) {
+    quiz.innerHTML = `<p tabindex="-1" id="result">完成！第一次答對 ${queue.length - missed.length} / ${queue.length}。
+      ${english(`Finished! ${queue.length - missed.length} of ${queue.length} correct on the first try.`)}</p>
+      ${missed.length ? `<button data-action="retry" class="primary">重練錯題 ${english("Retry missed terms")}</button>` : ""}
+      <button data-action="restart">再練全部 ${english("Practice all again")}</button>`;
+    get("result").focus();
+    return;
+  }
+  answered = false;
+  attempts = 0;
+  const id = queue[position];
+  const [word, , , gloss, , first, , second] = words[id];
+  const example = first.includes(word) ? first : second;
+  const options = shuffle([id, ...shuffle(words.map((_, index) => index).filter(index => index !== id)).slice(0, 3)]);
+  quiz.innerHTML = `<p>${position + 1} / ${queue.length}</p>
+    <h3 id="question" tabindex="-1">${mode === "beginner" ? `<span lang="en">${gloss}</span>` : example.replace(word, "＿＿＿＿")}</h3>
+    <div class="options" role="group" aria-labelledby="question">
+      ${options.map(index => `<button data-answer="${index}">${words[index][0]}</button>`).join("")}
+    </div>
+    <p id="feedback" role="status"></p>
+    <button data-action="next" class="primary" id="next" disabled>下一題 ${english("Next")}</button>`;
+}
+
+function answer(button) {
+  if (answered) return;
+  const id = queue[position];
+  const correct = Number(button.dataset.answer) === id;
+  const feedback = get("feedback");
+  if (!correct) {
+    if (attempts === 0) missed.push(id);
+    attempts++;
+    button.classList.add("incorrect");
+    button.disabled = true;
+    if (attempts === 1) {
+      feedback.innerHTML = "再試一次。 " + english("Try again.");
+      quiz.querySelector(".options button:not(:disabled)").focus();
+      return;
+    }
+  }
+  answered = true;
+  const [word, pinyin] = words[id];
+  quiz.querySelectorAll("[data-answer]").forEach(option => { option.disabled = true; });
+  quiz.querySelector(`[data-answer="${id}"]`).classList.add("correct");
+  feedback.innerHTML = (correct ? "答對了！" : "正確答案是") + ` <strong>${word}</strong> ${english(pinyin)} ` +
+    listen(word, `聽「${word}」 · Listen to ${word}`);
+  get("next").disabled = false;
+  get("next").focus();
+}
+
+document.addEventListener("click", event => {
+  const button = event.target.closest("button");
+  if (!button) return;
+  if (button.dataset.say) play(button.dataset.say);
+  if (button.id === "stop") {
+    playback++;
+    speech?.cancel();
+    setAudioStatus("");
+  }
+  if (button.dataset.mode && button.dataset.mode !== mode) {
+    mode = button.dataset.mode;
+    document.body.classList.toggle("review", mode === "review");
+    document.querySelectorAll("[data-mode]").forEach(option => option.setAttribute("aria-pressed", option === button));
+    document.querySelectorAll(".review-help").forEach(help => { help.hidden = mode !== "review"; });
+    start(words.map((_, index) => index));
+  }
+  if (button.dataset.answer !== undefined) answer(button);
+  switch (button.dataset.action) {
+    case "next":
+      position++;
+      showQuestion();
+      get("question")?.focus();
+      break;
+    case "retry":
+      start(missed);
+      get("question").focus();
+      break;
+    case "restart":
+      start(words.map((_, index) => index));
+      get("question").focus();
+      break;
+  }
+});
+
+speech?.getVoices();
+start(words.map((_, index) => index));
+</script>
+</body>
+</html>
